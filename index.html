@@ -736,7 +736,19 @@ function installPWA() {
   } else {
     document.getElementById('installBanner').classList.remove('show');
     document.getElementById('floatInstall').classList.add('hidden');
-    showToast('请用浏览器菜单「添加到主屏幕」\niPhone: Safari分享 → 添加到主屏幕\nAndroid/鸿蒙: 浏览器菜单 → 添加到桌面');
+    // 自动识别系统
+    var ua = navigator.userAgent || '';
+    var tip = '';
+    if (/iPhone|iPad|iPod/.test(ua)) {
+      tip = 'Safari → 底部分享按钮 → 添加到主屏幕';
+    } else if (/HarmonyOS|OpenHarmony|ArkWeb/.test(ua)) {
+      tip = '浏览器菜单 → 添加至桌面\n鸿蒙3/4: 底部导航 | NEXT: 右上角⋮';
+    } else if (/Android/.test(ua)) {
+      tip = 'Chrome → 右上角⋮ → 添加到主屏幕';
+    } else {
+      tip = '请用浏览器菜单「添加到主屏幕」';
+    }
+    showToast(tip);
   }
 }
 
