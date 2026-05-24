@@ -1,4 +1,4 @@
-# 山姆优选代购 - PWA 版
+# 会员店优选代购 - PWA 版
 
 ## 这是什么
 
@@ -21,7 +21,7 @@
 
 1. 登录 GitHub
 2. 点击右上角 **+** → **New repository**
-3. 仓库名填 `samshop`，选 **Public**，点击 **Create repository**
+3. 仓库名填 `vipshop`，选 **Public**，点击 **Create repository**
 4. 点击 **uploading an existing file**
 5. 把 `index.html`、`manifest.json`、`sw.js` 三个文件拖进去
 6. 点击 **Commit changes**
@@ -30,7 +30,7 @@
 
 1. 进入仓库 → **Settings** → 左侧 **Pages**
 2. **Branch** 选 `main`，点击 **Save**
-3. 等1-2分钟，页面顶部会显示 `Your site is live at https://你的用户名.github.io/samshop/`
+3. 等1-2分钟，页面顶部会显示 `Your site is live at https://你的用户名.github.io/vipshop/`
 
 ✅ 完成！打开这个地址就能用了。
 
