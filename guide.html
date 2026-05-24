@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山姆代购 - 使用教程</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #1B3A5C;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.container { max-width: 420px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* Header */
+.app-header {
+  text-align: center; padding: 24px 0 16px;
+  animation: fadeDown 0.6s ease;
+}
+.app-logo { font-size: 3.5rem; margin-bottom: 8px; }
+.app-title { font-size: 1.5rem; font-weight: 700; }
+.app-sub { font-size: 0.85rem; opacity: 0.7; margin-top: 4px; }
+
+/* Steps */
+.steps { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.step {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex; gap: 16px; align-items: flex-start;
+  opacity: 0; transform: translateX(30px);
+  animation: slideIn 0.5s ease forwards;
+  transition: all 0.3s;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  backdrop-filter: blur(10px);
+}
+.step:active { background: rgba(255,255,255,0.2); transform: scale(0.98); }
+.step:nth-child(1) { animation-delay: 0.2s; }
+.step:nth-child(2) { animation-delay: 0.4s; }
+.step:nth-child(3) { animation-delay: 0.6s; }
+.step:nth-child(4) { animation-delay: 0.8s; }
+.step:nth-child(5) { animation-delay: 1.0s; }
+.step:nth-child(6) { animation-delay: 1.2s; }
+
+.step-num {
+  width: 40px; height: 40px; min-width: 40px;
+  border-radius: 50%; background: #D4943A;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 1.1rem;
+}
+.step-content { flex: 1; }
+.step-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+.step-desc { font-size: 0.85rem; opacity: 0.8; line-height: 1.5; }
+.step-icon { font-size: 1.5rem; margin-top: 4px; }
+
+/* Demo mockup */
+.demo-area {
+  margin-top: 24px; padding: 16px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  text-align: center;
+  animation: fadeUp 0.6s ease 1.4s both;
+}
+.demo-title { font-size: 0.8rem; opacity: 0.6; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 2px; }
+.demo-phone {
+  width: 200px; height: 360px;
+  background: #f5f1eb;
+  border-radius: 24px;
+  margin: 0 auto 16px;
+  padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.demo-screen {
+  width: 100%; height: 100%;
+  background: #fff;
+  border-radius: 18px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.demo-header {
+  background: #1B3A5C; color: #fff;
+  padding: 8px 10px; font-size: 0.7rem;
+  font-weight: 700; display: flex; align-items: center;
+  gap: 4px;
+}
+.demo-content { flex: 1; padding: 8px; display: flex; flex-wrap: wrap; gap: 4px; align-content: flex-start; }
+.demo-card {
+  width: calc(50% - 2px); height: 80px;
+  background: #f8f8f8; border-radius: 6px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 1.4rem; animation: pulse 3s ease-in-out infinite;
+}
+.demo-card:nth-child(2) { animation-delay: 0.5s; }
+.demo-card:nth-child(3) { animation-delay: 1s; }
+.demo-card:nth-child(4) { animation-delay: 1.5s; }
+.demo-card-name { font-size: 0.55rem; color: #666; margin-top: 2px; }
+.demo-card-price { font-size: 0.6rem; color: #D4943A; font-weight: 700; }
+.demo-cart-btn {
+  position: absolute; bottom: 18px; right: 20px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: #1B3A5C; color: #fff; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* Bottom CTA */
+.cta {
+  margin-top: 16px; padding: 16px;
+  background: linear-gradient(135deg, #D4943A, #c07d2e);
+  border-radius: 16px;
+  text-align: center;
+  animation: fadeUp 0.6s ease 1.6s both;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.cta:active { transform: scale(0.97); }
+.cta-text { font-weight: 700; font-size: 1.1rem; }
+.cta-sub { font-size: 0.8rem; opacity: 0.8; margin-top: 2px; }
+
+/* Security banner */
+.security {
+  margin-top: 12px; padding: 12px 16px;
+  background: rgba(76,175,80,0.2); border: 1px solid rgba(76,175,80,0.3);
+  border-radius: 12px; font-size: 0.8rem;
+  display: flex; align-items: center; gap: 8px;
+  animation: fadeUp 0.6s ease 1.8s both;
+}
+.security .lock { font-size: 1.2rem; }
+
+@keyframes slideIn { to { opacity:1; transform: translateX(0); } }
+@keyframes fadeDown { from { opacity:0; transform: translateY(-20px); } to { opacity:1; transform: translateY(0); } }
+@keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* Step detail modal */
+.step-detail-overlay {
+  position: fixed; inset:0; background: rgba(0,0,0,0.8); z-index:100;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.step-detail-overlay.show { opacity: 1; pointer-events: auto; }
+.step-detail-card {
+  background: #fff; color: #333; border-radius: 20px;
+  width: 90%; max-width: 380px; padding: 24px;
+  text-align: center; transform: scale(0.9);
+  transition: transform 0.3s;
+}
+.step-detail-overlay.show .step-detail-card { transform: scale(1); }
+.step-detail-icon { font-size: 3.5rem; margin-bottom: 12px; }
+.step-detail-title { font-size: 1.2rem; font-weight: 700; color: #1B3A5C; margin-bottom: 8px; }
+.step-detail-desc { font-size: 0.9rem; color: #666; line-height: 1.6; margin-bottom: 20px; }
+.step-detail-btn {
+  padding: 12px 32px; background: #1B3A5C; color: #fff;
+  border: none; border-radius: 25px; font-size: 1rem; font-weight: 600;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.step-detail-btn:active { background: #2D5F8A; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="app-header">
+    <div class="app-logo">🛒</div>
+    <div class="app-title">山姆优选代购</div>
+    <div class="app-sub">使用教程 · 一看就会</div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step" onclick="showDetail('open')">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">打开选购页面</div>
+        <div class="step-desc">点击代购发给你的链接或扫描二维码，即可进入商品选购页面</div>
+        <div class="step-icon">🔗</div>
+      </div>
+    </div>
+
+    <div class="step" onclick="showDetail('browse')">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">挑选商品</div>
+        <div class="step-desc">浏览分类，看到想要的商品点击 <b>+</b> 号加入购物车</div>
+        <div class="step-icon">🛍️</div>
+      </div>
+    </div>
+
+    <div class="step" onclick="showDetail('cart')">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">查看购物车</div>
+        <div class="step-desc">点右上角购物车图标，确认商品和数量，点「去结算」</div>
+        <div class="step-icon">🛒</div>
+      </div>
+    </div>
+
+    <div class="step" onclick="showDetail('order')">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">填写信息</div>
+        <div class="step-desc">填姓名和手机号，<b>阅读隐私说明</b>并勾选同意，提交订单</div>
+        <div class="step-icon">📝</div>
+      </div>
+    </div>
+
+    <div class="step" onclick="showDetail('done')">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">下单成功</div>
+        <div class="step-desc">可复制订单信息发送给代购，或直接返回继续选购</div>
+        <div class="step-icon">✅</div>
+      </div>
+    </div>
+
+    <div class="step" onclick="showDetail('install')">
+      <div class="step-num">⭐</div>
+      <div class="step-content">
+        <div class="step-title">添加到桌面（推荐）</div>
+        <div class="step-desc">点底部「添加到桌面」，以后从手机桌面一键进入，像APP一样</div>
+        <div class="step-icon">📱</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo Phone -->
+  <div class="demo-area">
+    <div class="demo-title">▼ 页面长这样 ▼</div>
+    <div class="demo-phone">
+      <div class="demo-screen">
+        <div class="demo-header">🛒 山姆优选代购</div>
+        <div class="demo-content">
+          <div class="demo-card">
+            <span>🍰</span>
+            <span class="demo-card-name">瑞士卷·原味</span>
+            <span class="demo-card-price">¥68</span>
+          </div>
+          <div class="demo-card">
+            <span>🥐</span>
+            <span class="demo-card-name">黄油牛角包</span>
+            <span class="demo-card-price">¥42</span>
+          </div>
+          <div class="demo-card">
+            <span>🥩</span>
+            <span class="demo-card-name">西冷牛排</span>
+            <span class="demo-card-price">¥109</span>
+          </div>
+          <div class="demo-card">
+            <span>🥤</span>
+            <span class="demo-card-name">小青柠汁</span>
+            <span class="demo-card-price">¥49</span>
+          </div>
+        </div>
+        <div class="demo-cart-btn">+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta" onclick="showDetail('install')">
+    <div class="cta-text">📱 添加到桌面，下次直接用</div>
+    <div class="cta-sub">像 APP 一样方便</div>
+  </div>
+
+  <!-- Security -->
+  <div class="security">
+    <span class="lock">🔒</span>
+    <span>您的个人信息仅用于本次订单，不会被采集或分享</span>
+  </div>
+
+</div>
+
+<!-- Detail Modal -->
+<div class="step-detail-overlay" id="detailOverlay" onclick="hideDetail(event)">
+  <div class="step-detail-card" id="detailCard"></div>
+</div>
+
+<script>
+const details = {
+  open: {
+    icon: '🔗', title: '打开选购页面',
+    desc: '代购人员会通过微信发送链接或二维码给您。<br><br>点击链接或扫描二维码即可打开商品选购页面，无需下载任何APP。'
+  },
+  browse: {
+    icon: '🛍️', title: '挑选商品',
+    desc: '页面顶部有分类标签（烘焙甜品、零食饮品、生鲜肉类等），点击切换分类。<br><br>看到想要的商品，点击右下角的 <b>+</b> 号即可加入购物车，再点一次可增加数量。'
+  },
+  cart: {
+    icon: '🛒', title: '查看购物车',
+    desc: '点击页面右上角🛍️图标，从底部弹出购物车面板。<br><br>可以调整数量（+/-按钮）或删除商品，确认无误后点击「去结算」。'
+  },
+  order: {
+    icon: '📝', title: '填写信息并提交',
+    desc: '确认订单明细，填写<strong>姓名</strong>和<strong>手机号</strong>（必填），微信号和备注选填。<br><br>⚠️ 请仔细阅读绿色的<strong>隐私安全说明</strong>，勾选同意后点击「提交订单」。<br><br>🔒 您的信息仅用于本次代购订单处理。'
+  },
+  done: {
+    icon: '✅', title: '下单成功',
+    desc: '订单提交成功后，会显示订单详情。<br><br>📋 点击「复制订单信息」可将订单内容复制到剪贴板，方便发送给代购人员核对。<br><br>点击「继续选购」返回商品页面。'
+  },
+  install: {
+    icon: '📱', title: '添加到手机桌面',
+    desc: '<strong>推荐操作！</strong>下次下单更方便。<br><br>📱 <b>iPhone (Safari)</b>：点底部中间的分享按钮 → 往下滑 → 点「添加到主屏幕」<br><br>📱 <b>Android (Chrome)</b>：点右上角三个点 → 点「添加到主屏幕」<br><br>添加后桌面会出现「山姆代购」图标，点击直接进入，全屏无地址栏，体验和APP一样！'
+  }
+};
+
+function showDetail(key) {
+  const d = details[key];
+  document.getElementById('detailCard').innerHTML = `
+    <div class="step-detail-icon">${d.icon}</div>
+    <div class="step-detail-title">${d.title}</div>
+    <div class="step-detail-desc">${d.desc}</div>
+    <button class="step-detail-btn" onclick="hideDetail()">我知道了</button>
+  `;
+  document.getElementById('detailOverlay').classList.add('show');
+}
+
+function hideDetail(e) {
+  if (e && e.target !== document.getElementById('detailOverlay')) return;
+  document.getElementById('detailOverlay').classList.remove('show');
+}
+</script>
+</body>
+</html>
