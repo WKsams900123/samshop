@@ -1274,35 +1274,28 @@ document.addEventListener('DOMContentLoaded', init);
 document.getElementById('cartOverlay').addEventListener('click', closeCart);
 document.getElementById('orderModal').addEventListener('click', function(e) { if (e.target === this) closeOrderForm(); });
 
-// 管理员入口：长按标题栏 2 秒进入后台
+// 管理员入口方式一：访问 ?admin 参数
+if (window.location.search.indexOf('admin') !== -1) {
+  setTimeout(openAdmin, 500);
+}
+
+// 管理员入口方式二：快速点击图标 3 次
 (function(){
-  var timer, bar = document.getElementById('headerBar');
-  if (!bar) return;
-
-  function startPress(e) {
-    bar.style.opacity = '0.7';
-    timer = setTimeout(function(){
-      bar.style.opacity = '1';
+  var taps = 0, tapTimer;
+  var icon = document.querySelector('.header-logo .icon');
+  if (!icon) return;
+  icon.style.cursor = 'default';
+  icon.addEventListener('click', function(e){
+    e.stopPropagation();
+    taps++;
+    if (taps === 1) {
+      tapTimer = setTimeout(function(){ taps = 0; }, 800);
+    }
+    if (taps >= 3) {
+      clearTimeout(tapTimer);
+      taps = 0;
       openAdmin();
-    }, 2000);
-  }
-  function cancelPress() {
-    clearTimeout(timer);
-    bar.style.opacity = '1';
-  }
-
-  bar.addEventListener('touchstart', startPress, {passive: true});
-  bar.addEventListener('mousedown', startPress);
-  bar.addEventListener('touchend', cancelPress);
-  bar.addEventListener('touchmove', cancelPress);
-  bar.addEventListener('touchcancel', cancelPress);
-  bar.addEventListener('mouseup', cancelPress);
-  bar.addEventListener('mouseleave', cancelPress);
-
-  // 电脑端右键也进去
-  bar.addEventListener('contextmenu', function(e){
-    e.preventDefault();
-    openAdmin();
+    }
   });
 })();
 </script>
