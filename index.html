@@ -491,10 +491,9 @@ body {
 
 <!-- Header -->
 <header class="header">
-  <div class="header-logo" onclick="openTutorial()" style="cursor:pointer;">
+  <div class="header-logo" id="headerLogo" style="cursor:default;">
     <span class="icon">🛒</span>
     <span>山姆优选代购</span>
-    <span style="font-size:0.65rem;opacity:0.6;margin-left:4px;">📖</span>
   </div>
   <button class="cart-btn" onclick="toggleCart()" id="cartBtn">
     🛍️
@@ -578,8 +577,8 @@ body {
   <div class="confirm-card" id="confirmCard"></div>
 </div>
 
-<!-- Admin Entry -->
-<button class="admin-entry" onclick="openAdmin()" title="管理">⚙</button>
+<!-- Admin Entry - 隐藏：长按标题3秒进入 -->
+<button class="admin-entry" id="adminEntry" style="display:none;" onclick="openAdmin()" title="管理">⚙</button>
 
 <!-- Admin Panel -->
 <div class="admin-panel" id="adminPanel">
@@ -597,7 +596,6 @@ body {
       <h3>🔐 请输入管理密码</h3>
       <input type="password" id="adminPassword" placeholder="管理密码" onkeydown="if(event.key==='Enter')verifyAdmin()">
       <button onclick="verifyAdmin()">进入</button>
-      <p style="color:var(--text-light);font-size:0.8rem;margin-top:8px;">默认密码: admin123（请在设置中修改）</p>
     </div>
     <div id="adminOrders" style="display:none"></div>
     <div id="adminStats" style="display:none"></div>
@@ -631,9 +629,6 @@ body {
   </button>
   <button class="bottom-nav-item" onclick="toggleCart()">
     <span class="nav-icon">🛍️</span> 购物车
-  </button>
-  <button class="bottom-nav-item" onclick="openAdmin()">
-    <span class="nav-icon">⚙</span> 管理
   </button>
 </nav>
 
@@ -1278,6 +1273,20 @@ function showToast(msg) {
 document.addEventListener('DOMContentLoaded', init);
 document.getElementById('cartOverlay').addEventListener('click', closeCart);
 document.getElementById('orderModal').addEventListener('click', function(e) { if (e.target === this) closeOrderForm(); });
+
+// 管理员入口：长按标题 2 秒进入管理后台
+(function(){
+  var timer, logo = document.getElementById('headerLogo');
+  if (!logo) return;
+  logo.addEventListener('touchstart', function(e){
+    timer = setTimeout(function(){ openAdmin(); }, 2000);
+    e.preventDefault();
+  });
+  logo.addEventListener('touchend', function(){ clearTimeout(timer); });
+  logo.addEventListener('touchmove', function(){ clearTimeout(timer); });
+  // 电脑端鼠标右键
+  logo.addEventListener('contextmenu', function(e){ e.preventDefault(); openAdmin(); });
+})();
 </script>
 
 </body>
