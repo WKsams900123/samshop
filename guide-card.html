@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=400, initial-scale=1.0">
+<title>会员店代购使用指南</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  width: 400px; margin: 0 auto;
+  font-family: "PingFang SC","Microsoft YaHei",sans-serif;
+  background: #f5f5f5;
+  -webkit-font-smoothing: antialiased;
+  padding: 0 0 4px 0;
+}
+
+/* Header */
+.card-header {
+  background: linear-gradient(135deg, #1B3A5C, #2D5F8A);
+  color: #fff; text-align: center;
+  padding: 28px 20px 24px;
+}
+.card-header .logo { font-size: 2.4rem; display:block; margin-bottom: 8px; }
+.card-header h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+.card-header p { font-size: 0.8rem; opacity: 0.75; }
+
+/* Steps */
+.steps { background: #fff; }
+.step {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 32px; height: 32px; min-width: 32px;
+  border-radius: 50%; background: #D4943A; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+}
+.step-icon { font-size: 1.3rem; margin-right: 2px; }
+.step-content { flex: 1; padding-top: 4px; }
+.step-title { font-size: 0.9rem; font-weight: 700; color: #1B3A5C; margin-bottom: 2px; }
+.step-desc { font-size: 0.78rem; color: #888; line-height: 1.5; }
+
+/* Highlight step */
+.step.highlight { background: #FFF8E1; }
+.step.highlight .step-num { background: #1B3A5C; font-size: 1rem; }
+
+/* Tips section */
+.tips { background: #f9f9f9; padding: 16px 18px; }
+.tips-title { font-size: 0.85rem; font-weight: 700; color: #1B3A5C; margin-bottom: 10px; }
+.tip-row { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: #666; padding: 4px 0; }
+.tip-row .os { color: #D4943A; font-weight: 600; min-width: 60px; font-size: 0.75rem; }
+
+/* Footer */
+.card-footer {
+  background: linear-gradient(135deg, #1B3A5C, #2D5F8A);
+  color: #fff; text-align: center;
+  padding: 14px 20px; font-size: 0.75rem;
+}
+.card-footer .privacy { margin-top: 6px; opacity: 0.7; font-size: 0.7rem; }
+
+/* QR section */
+.qr-section {
+  background: #fff; padding: 14px 18px;
+  text-align: center;
+  border-top: 3px dashed #eee;
+}
+.qr-section .qr-hint { font-size: 0.75rem; color: #888; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="card-header">
+  <span class="logo">🛒</span>
+  <h1>会员店优选代购</h1>
+  <p>手机选购 · 一键下单 · 使用指南</p>
+</div>
+
+<!-- Steps -->
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <div class="step-title">🔗 打开选购页面</div>
+      <div class="step-desc">扫描二维码或点击代购发的链接</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <div class="step-title">🛍️ 挑选商品</div>
+      <div class="step-desc">切换顶部分类，点击 <b>+</b> 号加入购物车</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <div class="step-title">🛒 去结算</div>
+      <div class="step-desc">点右上角购物车图标，确认后点「去结算」</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <div class="step-title">📝 填写信息</div>
+      <div class="step-desc">填姓名和手机号，阅读<b>隐私说明</b>并勾选同意</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <div class="step-title">✅ 提交订单</div>
+      <div class="step-desc">点击提交，可复制订单信息发送给代购确认</div>
+    </div>
+  </div>
+
+  <div class="step highlight">
+    <div class="step-num">⭐</div>
+    <div class="step-content">
+      <div class="step-title">📱 添加到桌面（推荐）</div>
+      <div class="step-desc">下次从手机桌面一键打开，像APP一样方便！</div>
+    </div>
+  </div>
+</div>
+
+<!-- Tips -->
+<div class="tips">
+  <div class="tips-title">📱 各系统添加桌面方法</div>
+  <div class="tip-row"><span class="os">🍎 iPhone</span>Safari → 分享按钮 → 添加到主屏幕</div>
+  <div class="tip-row"><span class="os">🤖 Android</span>Chrome → ⋮ 菜单 → 添加到主屏幕</div>
+  <div class="tip-row"><span class="os">🚀 鸿蒙</span>浏览器菜单 → 添加至桌面</div>
+  <div class="tip-row"><span class="os">🌐 华为</span>浏览器底部 → 工具箱 → 添加至桌面</div>
+</div>
+
+<!-- Footer -->
+<div class="card-footer">
+  <div>🛒 会员店优选代购 · 方便快捷</div>
+  <div class="privacy">🔒 您的信息仅用于本次订单，不会被采集或分享</div>
+</div>
+
+</body>
+</html>
