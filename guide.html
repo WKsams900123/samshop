@@ -269,7 +269,7 @@ body {
   <!-- CTA -->
   <div class="cta" onclick="showDetail('install')">
     <div class="cta-text">📱 添加到桌面，下次直接用</div>
-    <div class="cta-sub">像 APP 一样方便</div>
+    <div class="cta-sub" id="ctaSub">正在识别您的手机系统...</div>
   </div>
 
   <!-- Security -->
@@ -286,6 +286,30 @@ body {
 </div>
 
 <script>
+// ===== 智能系统识别 =====
+function detectOS() {
+  var ua = (navigator.userAgent || '') + ' ' + (navigator.platform || '');
+  if (/iPhone|iPad|iPod/.test(ua)) return 'ios';
+  if (/HarmonyOS|OpenHarmony|ArkWeb/.test(ua)) return 'harmonyos';
+  if (/Android/.test(ua)) return 'android';
+  return 'other';
+}
+
+function getInstallHTML() {
+  var os = detectOS();
+  var guides = {
+    ios: '<strong>📱 iOS / iPhone 添加方法</strong><br><br>1. 在 <b>Safari</b> 中打开页面<br>2. 点底部中间 <b>分享按钮</b>（↑方框）<br>3. 下滑找到 <b>「添加到主屏幕」</b><br>4. 点右上角「添加」<br><br><span style="color:#888;font-size:0.8rem;">📌 其他系统：见下方</span>',
+    android: '<strong>📱 Android 添加方法</strong><br><br>1. 在 <b>Chrome</b> 或浏览器中打开<br>2. 点右上角 <b>⋮</b> 菜单<br>3. 选择 <b>「添加到主屏幕」</b><br>4. 确认添加<br><br><span style="color:#888;font-size:0.8rem;">📌 其他系统：见下方</span>',
+    harmonyos: '<strong>📱 鸿蒙 HarmonyOS 添加方法</strong><br><br>1. 在 <b>华为浏览器</b> 或系统浏览器中打开<br>2. 点浏览器菜单按钮<br>3. 找到 <b>「添加至桌面」</b><br>4. 确认添加<br><br><b style="color:#D4943A;">💡 不同鸿蒙版本：</b><br>• 鸿蒙 3.0/4.0：底部导航 → 添加至桌面<br>• 鸿蒙 NEXT：右上角 ⋮ → 添加至桌面<br>• 华为浏览器：底部中间 → 工具箱<br><br><span style="color:#888;font-size:0.8rem;">📌 其他系统：见下方</span>',
+    other: '<strong>📱 其他系统</strong><br><br>在浏览器菜单中查找 <b>「添加到主屏幕」</b><br>或<b>「添加至桌面」</b>功能。<br><br>常见位置：浏览器菜单、分享按钮、工具箱。'
+  };
+  return (guides[os] || guides.other) + 
+    '<br><hr style="border:none;border-top:1px dashed #ddd;margin:10px 0;"><div style="font-size:0.8rem;color:#888;line-height:1.8;">' +
+    '🍎 iPhone: Safari → 分享 → 添加到主屏幕<br>' +
+    '🤖 Android: Chrome → ⋮ → 添加到主屏幕<br>' +
+    '🚀 鸿蒙: 华为浏览器 → 菜单 → 添加至桌面</div>';
+}
+
 const details = {
   open: {
     icon: '🔗', title: '打开选购页面',
@@ -308,19 +332,20 @@ const details = {
     desc: '订单提交成功后，会显示订单详情。<br><br>📋 点击「复制订单信息」可将订单内容复制到剪贴板，方便发送给代购人员核对。<br><br>点击「继续选购」返回商品页面。'
   },
   install: {
-    icon: '📱', title: '添加到手机桌面',
-    desc: '<strong>推荐操作！</strong>下次下单更方便。<br><br>📱 <b>iPhone (Safari)</b>：点底部中间分享按钮 → 往下滑 → 点「添加到主屏幕」<br><br>📱 <b>Android / 鸿蒙 (浏览器)</b>：点右上角 ⋮ 或底部菜单 → 点「添加到桌面」或「添加至桌面」<br><br>📱 <b>鸿蒙 (华为浏览器)</b>：点底部中间 ≡ 菜单 → 点「添加至桌面」<br><br>添加后桌面会出现「山姆代购」图标，点击直接进入，全屏体验和APP一样！'
+    icon: '📱', title_prefix: '添加到手机桌面',
+    getDesc: getInstallHTML
   }
 };
 
 function showDetail(key) {
-  const d = details[key];
-  document.getElementById('detailCard').innerHTML = `
-    <div class="step-detail-icon">${d.icon}</div>
-    <div class="step-detail-title">${d.title}</div>
-    <div class="step-detail-desc">${d.desc}</div>
-    <button class="step-detail-btn" onclick="hideDetail()">我知道了</button>
-  `;
+  var d = details[key];
+  var desc = (typeof d.getDesc === 'function') ? d.getDesc() : d.desc;
+  var title = d.title_prefix || d.title;
+  document.getElementById('detailCard').innerHTML = 
+    '<div class="step-detail-icon">' + d.icon + '</div>' +
+    '<div class="step-detail-title">' + title + '</div>' +
+    '<div class="step-detail-desc">' + desc + '</div>' +
+    '<button class="step-detail-btn" onclick="hideDetail()">我知道了</button>';
   document.getElementById('detailOverlay').classList.add('show');
 }
 
@@ -328,6 +353,12 @@ function hideDetail(e) {
   if (e && e.target !== document.getElementById('detailOverlay')) return;
   document.getElementById('detailOverlay').classList.remove('show');
 }
+
+// 页面加载时自动识别系统
+(function(){
+  var osName = {ios:'iOS / iPhone', android:'Android', harmonyos:'鸿蒙 HarmonyOS', other:'您的手机'}[detectOS()];
+  document.getElementById('ctaSub').textContent = '已识别：' + osName + '  |  点击查看添加方法';
+})();
 </script>
 </body>
 </html>
