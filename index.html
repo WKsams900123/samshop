@@ -101,8 +101,11 @@ body {
 .product-img {
   width: 100%; aspect-ratio: 1;
   display: flex; align-items: center; justify-content: center;
-  font-size: 3rem; background: linear-gradient(135deg, #f8f6f2, #f0ebe0);
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8f6f2, #f0ebe0);
 }
+.product-img img { width: 100%; height: 100%; object-fit: cover; }
+.product-img .emoji { font-size: 3rem; }
 .product-info { padding: 10px 12px 12px; flex:1; display:flex; flex-direction:column; }
 .product-name { font-size:0.9rem; font-weight:600; line-height:1.3; margin-bottom:2px; }
 .product-desc { font-size:0.75rem; color:var(--text-light); margin-bottom:8px; }
@@ -658,27 +661,27 @@ function initSupabase() {
 
 // ==================== 商品数据 ====================
 const PRODUCTS = [
-  { id:1,  name:'瑞士卷·原味',      cat:'烘焙甜品', price:68,   unit:'盒', emoji:'🍰', desc:'16片装，奶油细腻' },
-  { id:2,  name:'瑞士卷·伯爵红茶',  cat:'烘焙甜品', price:68,   unit:'盒', emoji:'🍰', desc:'16片装，茶香浓郁' },
-  { id:3,  name:'麻薯面包',          cat:'烘焙甜品', price:35,   unit:'盒', emoji:'🥖', desc:'24个装，Q弹软糯' },
-  { id:4,  name:'提拉米苏蛋糕',      cat:'烘焙甜品', price:89,   unit:'个', emoji:'🎂', desc:'约800g，经典意式' },
-  { id:5,  name:'黄油牛角包',        cat:'烘焙甜品', price:42,   unit:'盒', emoji:'🥐', desc:'12个装，酥香可口' },
-  { id:6,  name:'巴斯克芝士蛋糕',    cat:'烘焙甜品', price:79,   unit:'个', emoji:'🧀', desc:'6寸，芝士浓郁' },
-  { id:7,  name:'小青柠汁饮料',      cat:'零食饮品', price:49,   unit:'箱', emoji:'🥤', desc:'300ml×8瓶' },
-  { id:8,  name:'混合坚果',           cat:'零食饮品', price:128,  unit:'罐', emoji:'🥜', desc:'1.1kg，原味盐焗' },
-  { id:9,  name:'原味酸牛奶',        cat:'零食饮品', price:59,   unit:'箱', emoji:'🥛', desc:'100g×12杯' },
-  { id:10, name:'泰国椰子水',        cat:'零食饮品', price:69,   unit:'箱', emoji:'🥥', desc:'330ml×12瓶' },
-  { id:11, name:'美式烤鸡',          cat:'生鲜肉类', price:39.9, unit:'只', emoji:'🍗', desc:'整只，鲜嫩多汁' },
-  { id:12, name:'澳洲肥牛卷',        cat:'生鲜肉类', price:89,   unit:'盒', emoji:'🥩', desc:'1kg，火锅必备' },
-  { id:13, name:'三文鱼排',          cat:'生鲜肉类', price:79,   unit:'份', emoji:'🐟', desc:'500g，刺身级' },
-  { id:14, name:'谷饲西冷牛排',      cat:'生鲜肉类', price:109,  unit:'份', emoji:'🥩', desc:'2块装，肉质细嫩' },
-  { id:15, name:'鲜牛奶',             cat:'乳品蛋类', price:39.9, unit:'组', emoji:'🥛', desc:'1L×2瓶' },
-  { id:16, name:'鲜鸡蛋',             cat:'乳品蛋类', price:29.9, unit:'盒', emoji:'🥚', desc:'30枚，谷物喂养' },
-  { id:17, name:'马苏里拉芝士碎',    cat:'乳品蛋类', price:45,   unit:'袋', emoji:'🧀', desc:'500g，拉丝效果好' },
-  { id:18, name:'智利车厘子',        cat:'水果',     price:99,   unit:'箱', emoji:'🍒', desc:'JJ级 500g' },
-  { id:19, name:'泰国金枕榴莲',      cat:'水果',     price:129,  unit:'个', emoji:'🫒', desc:'约2-2.5kg' },
-  { id:20, name:'日式煎饺',          cat:'速食冷冻', price:49,   unit:'袋', emoji:'🥟', desc:'50个装，薄皮大馅' },
-  { id:21, name:'意大利肉酱面',      cat:'速食冷冻', price:69,   unit:'份', emoji:'🍝', desc:'4份装，微波即食' }
+  { id:1,  name:'瑞士卷·原味',      cat:'烘焙甜品', price:68,   unit:'盒', emoji:'🍰', desc:'16片装，奶油细腻', img:'images/img01.png' },
+  { id:2,  name:'瑞士卷·伯爵红茶',  cat:'烘焙甜品', price:68,   unit:'盒', emoji:'🍰', desc:'16片装，茶香浓郁', img:'images/img02.png' },
+  { id:3,  name:'麻薯面包',          cat:'烘焙甜品', price:35,   unit:'盒', emoji:'🥖', desc:'24个装，Q弹软糯', img:'images/img03.png' },
+  { id:4,  name:'提拉米苏蛋糕',      cat:'烘焙甜品', price:89,   unit:'个', emoji:'🎂', desc:'约800g，经典意式', img:'images/img04.png' },
+  { id:5,  name:'黄油牛角包',        cat:'烘焙甜品', price:42,   unit:'盒', emoji:'🥐', desc:'12个装，酥香可口', img:'images/img05.png' },
+  { id:6,  name:'巴斯克芝士蛋糕',    cat:'烘焙甜品', price:79,   unit:'个', emoji:'🧀', desc:'6寸，芝士浓郁', img:'images/img06.png' },
+  { id:7,  name:'小青柠汁饮料',      cat:'零食饮品', price:49,   unit:'箱', emoji:'🥤', desc:'300ml×8瓶', img:'images/img07.png' },
+  { id:8,  name:'混合坚果',           cat:'零食饮品', price:128,  unit:'罐', emoji:'🥜', desc:'1.1kg，原味盐焗', img:'images/img08.png' },
+  { id:9,  name:'原味酸牛奶',        cat:'零食饮品', price:59,   unit:'箱', emoji:'🥛', desc:'100g×12杯', img:'' },
+  { id:10, name:'泰国椰子水',        cat:'零食饮品', price:69,   unit:'箱', emoji:'🥥', desc:'330ml×12瓶', img:'' },
+  { id:11, name:'美式烤鸡',          cat:'生鲜肉类', price:39.9, unit:'只', emoji:'🍗', desc:'整只，鲜嫩多汁', img:'' },
+  { id:12, name:'澳洲肥牛卷',        cat:'生鲜肉类', price:89,   unit:'盒', emoji:'🥩', desc:'1kg，火锅必备', img:'' },
+  { id:13, name:'三文鱼排',          cat:'生鲜肉类', price:79,   unit:'份', emoji:'🐟', desc:'500g，刺身级', img:'' },
+  { id:14, name:'谷饲西冷牛排',      cat:'生鲜肉类', price:109,  unit:'份', emoji:'🥩', desc:'2块装，肉质细嫩', img:'' },
+  { id:15, name:'鲜牛奶',             cat:'乳品蛋类', price:39.9, unit:'组', emoji:'🥛', desc:'1L×2瓶', img:'' },
+  { id:16, name:'鲜鸡蛋',             cat:'乳品蛋类', price:29.9, unit:'盒', emoji:'🥚', desc:'30枚，谷物喂养', img:'' },
+  { id:17, name:'马苏里拉芝士碎',    cat:'乳品蛋类', price:45,   unit:'袋', emoji:'🧀', desc:'500g，拉丝效果好', img:'' },
+  { id:18, name:'智利车厘子',        cat:'水果',     price:99,   unit:'箱', emoji:'🍒', desc:'JJ级 500g', img:'' },
+  { id:19, name:'泰国金枕榴莲',      cat:'水果',     price:129,  unit:'个', emoji:'🫒', desc:'约2-2.5kg', img:'' },
+  { id:20, name:'日式煎饺',          cat:'速食冷冻', price:49,   unit:'袋', emoji:'🥟', desc:'50个装，薄皮大馅', img:'' },
+  { id:21, name:'意大利肉酱面',      cat:'速食冷冻', price:69,   unit:'份', emoji:'🍝', desc:'4份装，微波即食', img:'' }
 ];
 const CATEGORIES = ['全部','烘焙甜品','零食饮品','生鲜肉类','乳品蛋类','水果','速食冷冻'];
 
@@ -860,9 +863,10 @@ function renderProducts() {
   const filtered = currentCat === '全部' ? PRODUCTS : PRODUCTS.filter(p => p.cat === currentCat);
   document.getElementById('productGrid').innerHTML = filtered.map(p => {
     const inCart = cart.find(c => c.id === p.id);
+    const imgHtml = p.img ? `<img src="${p.img}" alt="${p.name}" loading="lazy">` : `<span class="emoji">${p.emoji}</span>`;
     return `
       <div class="product-card">
-        <div class="product-img">${p.emoji}</div>
+        <div class="product-img">${imgHtml}</div>
         <div class="product-info">
           <div class="product-name">${p.name}</div>
           <div class="product-desc">${p.desc}</div>
@@ -958,9 +962,10 @@ function renderCartItems() {
   container.innerHTML = cart.map(c => {
     const p = PRODUCTS.find(p => p.id === c.id);
     if (!p) return '';
+    const imgHtml = p.img ? `<img src="${p.img}" alt="${p.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">` : p.emoji;
     return `
       <div class="cart-item">
-        <div class="cart-item-img">${p.emoji}</div>
+        <div class="cart-item-img">${imgHtml}</div>
         <div class="cart-item-info">
           <div class="cart-item-name">${p.name}</div>
           <div class="cart-item-price">¥${p.price}/${p.unit}</div>
