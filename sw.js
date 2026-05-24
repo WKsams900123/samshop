@@ -1,5 +1,5 @@
-// 山姆优选代购 - Service Worker
-const CACHE_NAME = 'samshop-v2';
+// 会员店优选代购 - Service Worker
+const CACHE_NAME = 'vipshop-v2';
 const ASSETS = [
   './',
   './index.html',
