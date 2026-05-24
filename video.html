@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山姆代购 - 操作视频教程</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #0a0a0a;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; overflow: hidden;
+}
+.player {
+  width: 100%; max-width: 420px;
+  background: #1a1a2e;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  position: relative;
+}
+.player-header {
+  background: #16213e;
+  padding: 12px 16px;
+  display: flex; align-items: center;
+  gap: 8px;
+}
+.player-dot { width:8px; height:8px; border-radius:50%; background:#ff5f57; }
+.player-dot:nth-child(2) { background:#febc2e; }
+.player-dot:nth-child(3) { background:#28c840; }
+.player-title {
+  margin-left: 8px; font-size: 0.8rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.screen {
+  position: relative;
+  aspect-ratio: 9/16;
+  background: #f5f1eb;
+  overflow: hidden;
+}
+
+.scene {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; transform: scale(0.95);
+  transition: all 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+}
+.scene.active { opacity: 1; transform: scale(1); }
+
+/* Scene backgrounds */
+.scene-bg { position: absolute; inset:0; z-index:0; }
+.scene-content { position: relative; z-index:1; text-align:center; padding:20px; width:100%; }
+
+/* Scene 1: Welcome */
+.scene1 .big-icon { font-size: 5rem; animation: float 3s ease-in-out infinite; }
+.scene1 h2 { font-size:1.4rem; color:#1B3A5C; margin:8px 0; }
+.scene1 p { font-size:0.9rem; color:#666; }
+
+/* Scene 2: Browse */
+.scene2 .phone-mock {
+  width: 75%; background:#fff;
+  border-radius: 16px; padding: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.scene2 .mock-header {
+  background:#1B3A5C; color:#fff;
+  padding: 8px 12px; border-radius: 8px 8px 0 0;
+  display: flex; align-items: center; gap: 6px;
+  font-size:0.7rem; font-weight:700;
+}
+.scene2 .mock-grid {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: 6px; padding: 8px 0;
+}
+.scene2 .mock-card {
+  aspect-ratio: 1; background:#f8f8f8;
+  border-radius: 8px; display: flex;
+  flex-direction: column; align-items: center;
+  justify-content: center; font-size: 1.6rem;
+}
+.scene2 .mock-card.selected {
+  background: #f5e6d0; border: 2px solid #D4943A;
+}
+.scene2 .plus {
+  display: inline-block; width: 24px; height: 24px;
+  background: #1B3A5C; color: #fff;
+  border-radius: 50%; font-size:0.8rem;
+  line-height: 24px; text-align: center;
+  animation: popIn 0.4s ease;
+}
+
+/* Scene 3: Cart */
+.scene3 .cart-mock {
+  width: 80%; background:#fff;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+  padding: 16px;
+}
+.scene3 .cart-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 0; border-bottom:1px solid #f0f0f0;
+  margin-bottom: 4px;
+}
+.scene3 .cart-total {
+  display: flex; justify-content: space-between;
+  font-weight:700; margin-top:8px; padding-top:8px;
+  border-top: 2px dashed #ddd;
+}
+
+/* Scene 4: Privacy */
+.scene4 .privacy-box {
+  background: #f0faf0; border: 2px solid #4CAF50;
+  border-radius: 12px; padding: 16px; margin-bottom: 16px;
+  text-align: left; font-size:0.8rem; color:#2e7d32;
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Scene 5: Success */
+.scene5 .success-icon {
+  font-size: 4rem;
+  animation: popIn 0.5s ease, float 2s ease-in-out 0.5s infinite;
+}
+.scene5 h3 { color: #4CAF50; margin: 8px 0; }
+
+/* Scene 6: Install */
+.scene6 .install-demo {
+  background: #1B3A5C; color: #fff;
+  border-radius: 12px; padding: 16px;
+  margin-bottom: 12px;
+}
+
+/* Controls */
+.controls {
+  padding: 16px;
+  display: flex; align-items: center;
+  gap: 12px;
+}
+.progress {
+  flex:1; height:4px; background:rgba(255,255,255,0.15);
+  border-radius:2px; overflow:hidden;
+}
+.progress-bar {
+  height:100%; background: #D4943A;
+  border-radius:2px; transition: width 0.3s;
+  width: 0%;
+}
+.time { font-size:0.75rem; color:rgba(255,255,255,0.5); min-width:70px; text-align:center; }
+.nav-btn {
+  background: rgba(255,255,255,0.1); border: none;
+  color: #fff; width: 36px; height: 36px;
+  border-radius: 50%; font-size:1rem; cursor:pointer;
+  display: flex; align-items:center; justify-content:center;
+  transition: background 0.2s;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.2); }
+.nav-btn:disabled { opacity: 0.3; }
+
+/* Step indicators */
+.steps-indicator {
+  display: flex; gap: 6px; justify-content: center;
+  padding: 0 16px 12px;
+}
+.step-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: all 0.3s;
+}
+.step-dot.active { background: #D4943A; width: 24px; border-radius: 4px; }
+
+/* Animations */
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes glow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(76,175,80,0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Caption */
+.caption {
+  position: absolute; bottom: 16px; left: 16px; right: 16px;
+  background: rgba(0,0,0,0.75); color: #fff;
+  padding: 10px 14px; border-radius: 8px;
+  font-size: 0.8rem; text-align: center;
+  z-index: 2;
+  animation: slideUp 0.4s ease;
+}
+
+/* Auto-play hint */
+.autoplay-hint {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(0,0,0,0.6); color: #fff;
+  padding: 4px 10px; border-radius: 12px;
+  font-size: 0.7rem; z-index: 2;
+  display: flex; align-items: center; gap: 4px;
+}
+.autoplay-hint.paused { background: rgba(255,0,0,0.6); }
+</style>
+</head>
+<body>
+<div class="player">
+  <div class="player-header">
+    <span class="player-dot"></span>
+    <span class="player-dot"></span>
+    <span class="player-dot"></span>
+    <span class="player-title">山姆优选代购 · 操作教程</span>
+  </div>
+
+  <div class="screen" id="screen" onclick="toggleAutoPlay()">
+    <!-- Scene 1: Welcome -->
+    <div class="scene scene1 active" id="scene0">
+      <div class="scene-content">
+        <div class="big-icon">🛒</div>
+        <h2>山姆优选代购</h2>
+        <p>手机选购 · 一键下单 · 方便快捷</p>
+      </div>
+    </div>
+
+    <!-- Scene 2: Browse Products -->
+    <div class="scene scene2" id="scene1">
+      <div class="scene-content">
+        <div class="phone-mock">
+          <div class="mock-header">🛒 山姆优选代购</div>
+          <div class="mock-grid">
+            <div class="mock-card selected">🍰<span style="font-size:0.55rem;color:#666;margin-top:2px;">瑞士卷 ¥68</span><span class="plus">+</span></div>
+            <div class="mock-card">🥐<span style="font-size:0.55rem;color:#666;margin-top:2px;">牛角包 ¥42</span></div>
+            <div class="mock-card">🥩<span style="font-size:0.55rem;color:#666;margin-top:2px;">牛排 ¥109</span></div>
+            <div class="mock-card">🥤<span style="font-size:0.55rem;color:#666;margin-top:2px;">青柠汁 ¥49</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">点 + 号把商品加入购物车</div>
+    </div>
+
+    <!-- Scene 3: Cart -->
+    <div class="scene scene3" id="scene2">
+      <div class="scene-content">
+        <div class="cart-mock">
+          <div style="font-weight:700;margin-bottom:12px;">🛒 购物车</div>
+          <div class="cart-row">
+            <span>🍰</span>
+            <span style="flex:1;font-size:0.8rem;">瑞士卷·原味</span>
+            <span style="display:flex;align-items:center;gap:8px;">
+              <span style="width:22px;height:22px;border:1px solid #ddd;border-radius:50%;text-align:center;line-height:22px;">−</span>
+              <span>1</span>
+              <span style="width:22px;height:22px;border:1px solid #ddd;border-radius:50%;text-align:center;line-height:22px;">+</span>
+            </span>
+          </div>
+          <div class="cart-row">
+            <span>🥩</span>
+            <span style="flex:1;font-size:0.8rem;">西冷牛排</span>
+            <span style="display:flex;align-items:center;gap:8px;">
+              <span style="width:22px;height:22px;border:1px solid #ddd;border-radius:50%;text-align:center;line-height:22px;">−</span>
+              <span>2</span>
+              <span style="width:22px;height:22px;border:1px solid #ddd;border-radius:50%;text-align:center;line-height:22px;">+</span>
+            </span>
+          </div>
+          <div class="cart-total">
+            <span>合计</span>
+            <span style="color:#D4943A;">¥286.00</span>
+          </div>
+        </div>
+      </div>
+      <div class="caption">确认商品和数量，点「去结算」</div>
+    </div>
+
+    <!-- Scene 4: Privacy + Info -->
+    <div class="scene scene4" id="scene3">
+      <div class="scene-content">
+        <div class="privacy-box">
+          🔒 <strong>隐私安全说明</strong><br>
+          我们不会采集、存储或分享您的个人信息。您填写的姓名和手机号仅用于本次代购订单。
+        </div>
+        <div style="text-align:left;background:#fff;border-radius:12px;padding:14px;">
+          <div style="margin-bottom:8px;font-size:0.8rem;color:#666;">* 姓名 <input style="width:100%;padding:6px;border:1px solid #ddd;border-radius:6px;margin-top:4px;" placeholder="张三"></div>
+          <div style="margin-bottom:8px;font-size:0.8rem;color:#666;">* 手机号 <input style="width:100%;padding:6px;border:1px solid #ddd;border-radius:6px;margin-top:4px;" placeholder="138****1234"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:12px;font-size:0.8rem;color:#666;">
+          <input type="checkbox" checked style="accent-color:#1B3A5C;"> 我已阅读并同意隐私说明
+        </div>
+      </div>
+      <div class="caption">阅读隐私说明，填写信息并提交</div>
+    </div>
+
+    <!-- Scene 5: Success -->
+    <div class="scene scene5" id="scene4">
+      <div class="scene-content">
+        <div class="success-icon">✅</div>
+        <h3>下单成功！</h3>
+        <p style="color:#666;font-size:0.85rem;">订单号: SABC123XYZ</p>
+        <div style="background:#f9f7f4;border-radius:8px;padding:12px;margin:12px 0;text-align:left;font-size:0.75rem;color:#666;line-height:1.8;">
+          【山姆代购订单】<br>
+          瑞士卷·原味 ×1 ¥68.00<br>
+          西冷牛排 ×2 ¥218.00<br>
+          ━━━━━━━━<br>
+          合计：¥286.00
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:#1B3A5C;color:#fff;padding:10px;border-radius:20px;font-size:0.85rem;font-weight:600;">📋 复制订单信息</div>
+          <div style="border:1.5px solid #1B3A5C;color:#1B3A5C;padding:10px;border-radius:20px;font-size:0.85rem;font-weight:600;">继续选购</div>
+        </div>
+      </div>
+      <div class="caption">可复制订单发给代购，或继续选购</div>
+    </div>
+
+    <!-- Scene 6: Install -->
+    <div class="scene scene6" id="scene5">
+      <div class="scene-content">
+        <div style="font-size:3rem;margin-bottom:8px;">📱</div>
+        <div class="install-demo">
+          <div style="font-weight:700;margin-bottom:4px;">⭐ 添加到桌面</div>
+          <div style="font-size:0.8rem;opacity:0.8;">下次直接从桌面图标进入<br>像APP一样方便</div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:14px;text-align:left;font-size:0.75rem;color:#666;line-height:1.8;">
+          📱 <b>iPhone:</b> Safari底部分享 → 添加到主屏幕<br>
+          📱 <b>Android:</b> Chrome菜单 → 添加到主屏幕
+        </div>
+      </div>
+      <div class="caption">添加到桌面，一键打开超方便！</div>
+    </div>
+
+    <!-- Auto play hint -->
+    <div class="autoplay-hint" id="autoplayHint">▶ 自动播放</div>
+  </div>
+
+  <!-- Progress -->
+  <div style="padding:0 16px;">
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+
+  <!-- Step dots -->
+  <div class="steps-indicator" id="stepDots"></div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="nav-btn" onclick="prevScene()" id="prevBtn">◀</button>
+    <span class="time" id="timeDisplay">1 / 6</span>
+    <button class="nav-btn" onclick="nextScene()" id="nextBtn">▶</button>
+    <button class="nav-btn" onclick="toggleAutoPlay()" id="playBtn" style="margin-left:auto;">⏸</button>
+  </div>
+</div>
+
+<script>
+const TOTAL_SCENES = 6;
+let currentScene = 0;
+let autoPlay = true;
+let autoPlayTimer = null;
+const SCENE_DURATION = 4500; // 4.5 seconds per scene
+
+function init() {
+  // Create step dots
+  const dots = document.getElementById('stepDots');
+  for (let i = 0; i < TOTAL_SCENES; i++) {
+    const dot = document.createElement('span');
+    dot.className = 'step-dot';
+    dot.id = 'dot' + i;
+    dot.onclick = () => goToScene(i);
+    dots.appendChild(dot);
+  }
+  updateDisplay();
+  startAutoPlay();
+}
+
+function goToScene(index) {
+  currentScene = index;
+  updateDisplay();
+  resetAutoPlay();
+}
+
+function nextScene() {
+  currentScene = (currentScene + 1) % TOTAL_SCENES;
+  updateDisplay();
+  resetAutoPlay();
+}
+
+function prevScene() {
+  currentScene = (currentScene - 1 + TOTAL_SCENES) % TOTAL_SCENES;
+  updateDisplay();
+  resetAutoPlay();
+}
+
+function updateDisplay() {
+  // Update scenes
+  document.querySelectorAll('.scene').forEach((s, i) => {
+    s.classList.toggle('active', i === currentScene);
+  });
+  // Update dots
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === currentScene);
+  });
+  // Update progress bar
+  document.getElementById('progressBar').style.width = ((currentScene + 1) / TOTAL_SCENES * 100) + '%';
+  // Update time
+  document.getElementById('timeDisplay').textContent = (currentScene + 1) + ' / ' + TOTAL_SCENES;
+}
+
+function startAutoPlay() {
+  if (autoPlay) {
+    autoPlayTimer = setInterval(() => {
+      currentScene = (currentScene + 1) % TOTAL_SCENES;
+      updateDisplay();
+    }, SCENE_DURATION);
+  }
+}
+
+function resetAutoPlay() {
+  clearInterval(autoPlayTimer);
+  startAutoPlay();
+}
+
+function toggleAutoPlay() {
+  autoPlay = !autoPlay;
+  const hint = document.getElementById('autoplayHint');
+  const btn = document.getElementById('playBtn');
+  if (autoPlay) {
+    hint.textContent = '▶ 自动播放';
+    hint.classList.remove('paused');
+    btn.textContent = '⏸';
+    startAutoPlay();
+  } else {
+    hint.textContent = '⏸ 已暂停';
+    hint.classList.add('paused');
+    btn.textContent = '▶';
+    clearInterval(autoPlayTimer);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
