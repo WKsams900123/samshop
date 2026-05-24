@@ -371,6 +371,36 @@ body {
 .install-btn:active { background: #c07d2e; }
 .install-dismiss { background: none; border: none; color: rgba(255,255,255,0.7); font-size:1.3rem; cursor:pointer; padding:4px; }
 
+/* Floating Install Button */
+.float-install {
+  position: fixed; bottom: calc(80px + var(--safe-bottom)); right: 16px; z-index: 50;
+  background: var(--accent); color: #fff; border: none;
+  border-radius: 25px; padding: 10px 18px;
+  font-size: 0.85rem; font-weight: 600;
+  box-shadow: 0 4px 16px rgba(212,148,58,0.4);
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  animation: floatPulse 2s ease-in-out infinite;
+}
+.float-install:active { transform: scale(0.95); }
+.float-install.hidden { display: none; }
+@keyframes floatPulse {
+  0%,100% { box-shadow: 0 4px 16px rgba(212,148,58,0.4); }
+  50% { box-shadow: 0 4px 24px rgba(212,148,58,0.7); }
+}
+
+/* Help/Tutorial Button */
+.help-btn {
+  position: fixed; bottom: calc(80px + var(--safe-bottom)); left: 16px; z-index: 50;
+  background: #fff; color: var(--primary); border: 1.5px solid var(--border);
+  border-radius: 25px; padding: 10px 18px;
+  font-size: 0.85rem; font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.help-btn:active { background: #f5f5f5; }
+
 /* ========== Bottom Nav (PWA mode) ========== */
 .bottom-nav {
   display: none;
@@ -461,9 +491,10 @@ body {
 
 <!-- Header -->
 <header class="header">
-  <div class="header-logo">
+  <div class="header-logo" onclick="openTutorial()" style="cursor:pointer;">
     <span class="icon">🛒</span>
     <span>山姆优选代购</span>
+    <span style="font-size:0.65rem;opacity:0.6;margin-left:4px;">📖</span>
   </div>
   <button class="cart-btn" onclick="toggleCart()" id="cartBtn">
     🛍️
@@ -585,6 +616,14 @@ body {
   <button class="install-dismiss" onclick="dismissInstall()">✕</button>
 </div>
 
+<!-- Floating Buttons -->
+<button class="float-install hidden" id="floatInstall" onclick="installPWA()">
+  📱 添加到桌面
+</button>
+<button class="help-btn" onclick="openTutorial()">
+  📖 使用教程
+</button>
+
 <!-- Bottom Nav (PWA mode) -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="bottom-nav-item active" onclick="scrollToTop()">
@@ -663,13 +702,21 @@ let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  // 延迟显示安装提示（用户浏览3秒后再显示）
-  setTimeout(() => {
-    if (deferredPrompt && !localStorage.getItem('samshop_install_dismissed')) {
-      document.getElementById('installBanner').classList.add('show');
-    }
-  }, 3000);
+  // 立即显示安装提示
+  document.getElementById('installBanner').classList.add('show');
+  // 如果是手机且之前没关掉过，也显示浮动按钮
+  if (/Mobi|Android/i.test(navigator.userAgent) && !localStorage.getItem('samshop_install_dismissed')) {
+    document.getElementById('floatInstall').classList.remove('hidden');
+  }
 });
+
+// 如果 beforeinstallprompt 没触发（iOS 等），3秒后显示
+setTimeout(() => {
+  if (!deferredPrompt && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) && !localStorage.getItem('samshop_install_dismissed')) {
+    document.getElementById('installBanner').classList.add('show');
+    document.getElementById('floatInstall').classList.remove('hidden');
+  }
+}, 2000);
 
 window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
@@ -683,18 +730,24 @@ function installPWA() {
     deferredPrompt.userChoice.then((result) => {
       if (result.outcome === 'accepted') {
         document.getElementById('installBanner').classList.remove('show');
+        document.getElementById('floatInstall').classList.add('hidden');
       }
-      deferredPrompt = null;
     });
   } else {
     document.getElementById('installBanner').classList.remove('show');
-    showToast('请使用浏览器菜单中的"添加到主屏幕"');
+    document.getElementById('floatInstall').classList.add('hidden');
+    showToast('请用浏览器菜单「添加到主屏幕」');
   }
 }
 
 function dismissInstall() {
   document.getElementById('installBanner').classList.remove('show');
   localStorage.setItem('samshop_install_dismissed', '1');
+  document.getElementById('floatInstall').classList.add('hidden');
+}
+
+function openTutorial() {
+  window.open('guide.html', '_blank');
 }
 
 // Service Worker
