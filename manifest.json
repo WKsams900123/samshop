@@ -1,7 +1,7 @@
 {
-  "name": "山姆优选代购",
-  "short_name": "山姆代购",
-  "description": "山姆优选代购 - 手机下单，方便快捷",
+  "name": "会员店优选代购",
+  "short_name": "会员店代购",
+  "description": "会员店优选代购 - 手机下单，方便快捷",
   "start_url": ".",
   "display": "standalone",
   "orientation": "portrait",
