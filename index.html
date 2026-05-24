@@ -491,7 +491,7 @@ body {
 
 <!-- Header -->
 <header class="header">
-  <div class="header-logo" id="headerLogo" style="cursor:default;">
+  <div class="header-logo" id="headerLogo">
     <span class="icon">🛒</span>
     <span>山姆优选代购</span>
   </div>
@@ -1274,18 +1274,36 @@ document.addEventListener('DOMContentLoaded', init);
 document.getElementById('cartOverlay').addEventListener('click', closeCart);
 document.getElementById('orderModal').addEventListener('click', function(e) { if (e.target === this) closeOrderForm(); });
 
-// 管理员入口：长按标题 2 秒进入管理后台
+// 管理员入口：长按标题栏 2 秒进入后台
 (function(){
-  var timer, logo = document.getElementById('headerLogo');
-  if (!logo) return;
-  logo.addEventListener('touchstart', function(e){
-    timer = setTimeout(function(){ openAdmin(); }, 2000);
+  var timer, bar = document.getElementById('headerBar');
+  if (!bar) return;
+
+  function startPress(e) {
+    bar.style.opacity = '0.7';
+    timer = setTimeout(function(){
+      bar.style.opacity = '1';
+      openAdmin();
+    }, 2000);
+  }
+  function cancelPress() {
+    clearTimeout(timer);
+    bar.style.opacity = '1';
+  }
+
+  bar.addEventListener('touchstart', startPress, {passive: true});
+  bar.addEventListener('mousedown', startPress);
+  bar.addEventListener('touchend', cancelPress);
+  bar.addEventListener('touchmove', cancelPress);
+  bar.addEventListener('touchcancel', cancelPress);
+  bar.addEventListener('mouseup', cancelPress);
+  bar.addEventListener('mouseleave', cancelPress);
+
+  // 电脑端右键也进去
+  bar.addEventListener('contextmenu', function(e){
     e.preventDefault();
+    openAdmin();
   });
-  logo.addEventListener('touchend', function(){ clearTimeout(timer); });
-  logo.addEventListener('touchmove', function(){ clearTimeout(timer); });
-  // 电脑端鼠标右键
-  logo.addEventListener('contextmenu', function(e){ e.preventDefault(); openAdmin(); });
 })();
 </script>
 
